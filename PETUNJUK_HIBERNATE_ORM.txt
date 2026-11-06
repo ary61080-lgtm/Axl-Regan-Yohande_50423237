@@ -1,0 +1,22 @@
+================================================================================
+PETUNJUK PROYEK HIBERNATE ORM (JPA) NETBEANS 17 / 21 / 24
+================================================================================
+Project Name : hibernate-orm-cobamvc (atau cobamvc)
+Package      : com.mycompany.cobamvc
+Database     : db_pengadaan_sekolah (MySQL XAMPP)
+================================================================================
+
+BERKAS ORM HIBERNATE DALAM ZIP INI:
+1. pom.xml: Dependency hibernate-core (6.4.4.Final) & mysql-connector-j
+2. src/main/resources/hibernate.cfg.xml: Konfigurasi koneksi MySQL XAMPP & mapping Entity
+3. src/main/java/com/mycompany/cobamvc/HibernateUtil.java: SessionFactory provider
+4. src/main/java/com/mycompany/cobamvc/Pesanan.java: Entity class dengan anotasi @Entity, @Table, @Id
+5. src/main/java/com/mycompany/cobamvc/Main.java: Form CRUD transaksi
+6. src/main/java/com/mycompany/cobamvc/LoginForm.java & .form: Tampilan Login
+7. database_pengadaan_sekolah.sql: Struktur database MySQL XAMPP
+
+CARA BUKA:
+1. Ekstrak folder ini ke PC Anda.
+2. Buka NetBeans -> File -> Open Project... -> pilih folder ini.
+3. Jalankan LoginForm.java atau Main.java.
+================================================================================
