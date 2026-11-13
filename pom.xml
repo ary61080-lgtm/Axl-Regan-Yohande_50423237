@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>cobamvc pert 4</name>
+    <name>cobamvc spring dao m5</name>
     <description>Proyek GUI NetBeans 17 com.mycompany.cobamvc dengan JDBC MySQL XAMPP</description>
 
     <properties>
@@ -39,6 +39,18 @@
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>6.4.4.Final</version>
+        </dependency>
+
+        <!-- Spring Framework: Spring Context & Spring JDBC (Spring DAO) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>6.1.6</version>
         </dependency>
     </dependencies>
 
