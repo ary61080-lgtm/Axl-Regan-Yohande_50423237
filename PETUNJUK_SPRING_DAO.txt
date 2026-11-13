@@ -1,0 +1,22 @@
+================================================================================
+PETUNJUK PROYEK SPRING DAO (JdbcTemplate) NETBEANS 17 / 21 / 24
+================================================================================
+Project Name : spring-dao-cobamvc (cobamvc)
+Package      : com.mycompany.cobamvc
+Database     : db_pengadaan_sekolah (MySQL XAMPP)
+================================================================================
+
+BERKAS SPRING DAO DALAM ZIP INI:
+1. pom.xml: Dependency spring-context & spring-jdbc (6.1.6) + mysql-connector-j
+2. src/main/resources/applicationContext.xml: Bean DataSource, JdbcTemplate, & PesananSpringDao
+3. src/main/java/com/mycompany/cobamvc/PesananSpringDao.java: Class DAO dengan JdbcTemplate
+4. src/main/java/com/mycompany/cobamvc/Pesanan.java: Model POJO Pesanan
+5. src/main/java/com/mycompany/cobamvc/Main.java & LoginForm.java: GUI NetBeans
+6. database_pengadaan_sekolah.sql: Script database MySQL XAMPP
+
+CARA BUKA:
+1. Ekstrak folder ini.
+2. Buka NetBeans -> File -> Open Project... -> pilih folder ini.
+3. Klik kanan project -> Clean and Build (agar Maven download dependency Spring).
+4. Jalankan LoginForm.java atau Main.java.
+================================================================================
