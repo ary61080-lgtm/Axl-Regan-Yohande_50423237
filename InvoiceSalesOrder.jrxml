@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="InvoiceSalesOrder"
+              pageWidth="595"
+              pageHeight="842"
+              columnWidth="515"
+              leftMargin="40"
+              rightMargin="40"
+              topMargin="36"
+              bottomMargin="36"
+              uuid="9b2c1d88-45ef-4a12-8b34-1234567890ab">
+
+    <parameter name="NAMA_PERUSAHAAN" class="java.lang.String"/>
+    <parameter name="DIREKTUR" class="java.lang.String"/>
+    <parameter name="NO_INVOICE" class="java.lang.String"/>
+    <parameter name="NO_PESANAN" class="java.lang.String"/>
+    <parameter name="TANGGAL_CETAK" class="java.lang.String"/>
+
+    <queryString language="SQL">
+        <![CDATA[SELECT
+            p.nomor_pesanan,
+            p.nama_sekolah,
+            DATE_FORMAT(p.tanggal_pesanan, '%Y-%m-%d') AS tanggal_order,
+            p.status_pengiriman,
+            p.subtotal,
+            p.nominal_ppn,
+            p.total,
+            COALESCE(i.nama_barang, p.keterangan, 'Pengadaan Barang/Jasa Sekolah (Dana BOS)') AS nama_barang,
+            CASE WHEN i.id IS NOT NULL THEN CONCAT(i.qty, ' ', i.satuan) ELSE '1 Paket' END AS qty_satuan,
+            COALESCE(i.harga_satuan, p.subtotal) AS harga_satuan,
+            COALESCE(i.jumlah, p.subtotal) AS jumlah
+        FROM pesanan p
+        LEFT JOIN item_pesanan i ON i.nomor_pesanan = p.nomor_pesanan
+        WHERE p.nomor_pesanan = $P{NO_PESANAN}]]>
+    </queryString>
+
+    <field name="nomor_pesanan" class="java.lang.String"/>
+    <field name="nama_sekolah" class="java.lang.String"/>
+    <field name="tanggal_order" class="java.lang.String"/>
+    <field name="status_pengiriman" class="java.lang.String"/>
+    <field name="subtotal" class="java.lang.Double"/>
+    <field name="nominal_ppn" class="java.lang.Double"/>
+    <field name="total" class="java.lang.Double"/>
+    <field name="nama_barang" class="java.lang.String"/>
+    <field name="qty_satuan" class="java.lang.String"/>
+    <field name="harga_satuan" class="java.lang.Double"/>
+    <field name="jumlah" class="java.lang.Double"/>
+
+    <title>
+        <band height="156" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="0" width="515" height="62" backcolor="#0F172A" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0.0"/></graphicElement>
+            </rectangle>
+            <textField>
+                <reportElement x="16" y="10" width="320" height="22" forecolor="#FFFFFF"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{NAMA_PERUSAHAAN}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="16" y="34" width="320" height="18" forecolor="#CBD5E1"/>
+                <textElement verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="9"/>
+                </textElement>
+                <text><![CDATA[Penyedia Pengadaan Barang & Jasa Sekolah (Dana BOS / APBD)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="350" y="10" width="150" height="24" forecolor="#FACC15"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="15" isBold="true"/>
+                </textElement>
+                <text><![CDATA[INVOICE RESMI]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="350" y="34" width="150" height="18" forecolor="#E2E8F0"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font fontName="SansSerif" size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{NO_INVOICE}]]></textFieldExpression>
+            </textField>
+
+            <rectangle>
+                <reportElement x="0" y="72" width="515" height="74" backcolor="#F8FAFC" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0.75" lineColor="#CBD5E1"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="12" y="78" width="110" height="16" forecolor="#475569"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Ditagihkan Kepada]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="12" y="96" width="265" height="20" forecolor="#0F172A"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="11" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$F{nama_sekolah}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="12" y="118" width="265" height="18" forecolor="#334155"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA["Referensi Sales Order: " + $F{nomor_pesanan}]]></textFieldExpression>
+            </textField>
+
+            <textField>
+                <reportElement x="290" y="80" width="213" height="18" forecolor="#334155"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA["Tanggal Order: " + $F{tanggal_order}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="290" y="100" width="213" height="18" forecolor="#1D4ED8"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Status Order: " + $F{status_pengiriman}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="290" y="120" width="213" height="18" forecolor="#64748B"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="8"/></textElement>
+                <textFieldExpression><![CDATA["Dicetak: " + $P{TANGGAL_CETAK}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="26" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="0" width="515" height="26" backcolor="#1E293B" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0.5" lineColor="#1E293B"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="4" y="0" width="28" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[No]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="36" y="0" width="225" height="26" forecolor="#FFFFFF"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Uraian Barang / Pengadaan]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="264" y="0" width="68" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Qty]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="334" y="0" width="88" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Harga Satuan]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="424" y="0" width="85" height="26" forecolor="#FFFFFF"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <text><![CDATA[Jumlah]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="26" splitType="Stretch">
+            <rectangle>
+                <reportElement x="0" y="0" width="515" height="26" backcolor="#FFFFFF" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0.5" lineColor="#CBD5E1"/></graphicElement>
+            </rectangle>
+            <textField>
+                <reportElement x="4" y="0" width="28" height="26" forecolor="#0F172A"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField textAdjust="StretchHeight">
+                <reportElement x="36" y="0" width="225" height="26" forecolor="#0F172A"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{nama_barang}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="264" y="0" width="68" height="26" forecolor="#334155"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{qty_satuan}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="334" y="0" width="88" height="26" forecolor="#334155"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <textFieldExpression><![CDATA["Rp " + new java.text.DecimalFormat("#,##0").format($F{harga_satuan} != null ? $F{harga_satuan} : 0)]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="424" y="0" width="85" height="26" forecolor="#0F172A"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Rp " + new java.text.DecimalFormat("#,##0").format($F{jumlah} != null ? $F{jumlah} : 0)]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="165" splitType="Stretch">
+            <rectangle>
+                <reportElement x="275" y="10" width="240" height="68" backcolor="#F8FAFC" mode="Opaque"/>
+                <graphicElement><pen lineWidth="0.75" lineColor="#CBD5E1"/></graphicElement>
+            </rectangle>
+            <staticText>
+                <reportElement x="285" y="14" width="100" height="18" forecolor="#475569"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <text><![CDATA[Subtotal]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="385" y="14" width="122" height="18" forecolor="#0F172A"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Rp " + new java.text.DecimalFormat("#,##0").format($F{subtotal} != null ? $F{subtotal} : 0)]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="285" y="34" width="100" height="18" forecolor="#475569"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="9"/></textElement>
+                <text><![CDATA[Pajak PPN 11%]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="385" y="34" width="122" height="18" forecolor="#0F172A"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Rp " + new java.text.DecimalFormat("#,##0").format($F{nominal_ppn} != null ? $F{nominal_ppn} : 0)]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="285" y="54" width="100" height="20" forecolor="#15803D"/>
+                <textElement verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true"/></textElement>
+                <text><![CDATA[TOTAL TAGIHAN]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="385" y="54" width="122" height="20" forecolor="#15803D"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font fontName="SansSerif" size="10" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA["Rp " + new java.text.DecimalFormat("#,##0").format($F{total} != null ? $F{total} : 0)]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="315" y="96" width="200" height="16" forecolor="#334155"/>
+                <textElement textAlignment="Center"><font fontName="SansSerif" size="9"/></textElement>
+                <text><![CDATA[Hormat Kami / Disetujui Oleh,]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="315" y="138" width="200" height="18" forecolor="#0F172A"/>
+                <textElement textAlignment="Center"><font fontName="SansSerif" size="9" isBold="true"/></textElement>
+                <textFieldExpression><![CDATA[$P{DIREKTUR} + " (Direktur)"]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

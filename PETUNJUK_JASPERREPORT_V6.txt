@@ -1,0 +1,31 @@
+================================================================================
+PETUNJUK PRAKTIKUM PERTEMUAN 6: JASPERREPORTS COMMUNITY v6 (6.21.3)
+TANPA PERLU DOWNLOAD / INSTALL JASPERSOFT STUDIO!
+================================================================================
+Project Name : cobamvc (Folder: jasperreport-v6-cobamvc)
+Package      : com.mycompany.cobamvc
+Database     : db_pengadaan_sekolah (MySQL XAMPP)
+Library      : net.sf.jasperreports:jasperreports:6.21.3 + OpenPDF + POI + ECJ
+================================================================================
+
+LANGKAH MENJALANKAN DI APACHE NETBEANS (JDK 17 / 21 / 22):
+1. Ekstrak ZIP ini ke folder TANPA SPASI (contoh: C:\Users\Nama\Downloads\jasperreport-v6-cobamvc).
+2. Nyalakan XAMPP -> Start Apache & MySQL. Pastikan database 'db_pengadaan_sekolah'
+   sudah di-import dari file 'database_pengadaan_sekolah.sql'.
+3. Buka Apache NetBeans -> File -> Open Project... -> pilih folder 'jasperreport-v6-cobamvc'.
+4. Klik kanan nama project -> pilih "Clean and Build".
+5. CARA JALANKAN:
+   a. Tekan F6 (tombol Play hijau "Run Project" di toolbar atas NetBeans):
+      LoginForm akan terbuka (admin / password) -> masuk ke Main ->
+      klik tombol hitam "Laporan Jasper v6" untuk memilih:
+        * Pratinjau JasperViewer
+        * Ekspor ke PDF (.pdf)
+        * Ekspor ke Excel (.xlsx)
+        * Ekspor ke Word (.docx)
+        * Ekspor ke HTML (.html)
+   b. Atau klik kanan LaporanJasperService.java -> Run File (Shift + F6):
+      Otomatis membuat file PDF, Excel (.xlsx), Word (.docx), HTML (.html),
+      dan membuka jendela interaktif JasperViewer v6!
+      (Jika Run File berwarna abu-abu di NetBeans 17 + JDK 22: centang
+      Properties -> Build -> Compile -> Compile on Save, atau cukup tekan F6).
+================================================================================

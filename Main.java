@@ -274,18 +274,24 @@ public class Main extends JFrame {
         pnlTabel.add(new JScrollPane(tabelPesanan), BorderLayout.CENTER);
 
         // Tombol Aksi Tabel
-        JPanel pnlAksiTabel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 8));
-        JButton btnRefresh = new JButton("🔄 Muat Ulang / Refresh");
+        JPanel pnlAksiTabel = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
+        JButton btnRefresh = new JButton("🔄 Refresh Data");
         JButton btnHapus = new JButton("🗑 Hapus Pesanan");
-        JButton btnCetak = new JButton("📄 Cetak Bukti Invoice");
+        JButton btnCetak = new JButton("📄 Cetak Invoice");
+        JButton btnJasper = new JButton("📊 Laporan Jasper v6");
+        btnJasper.setBackground(new Color(15, 23, 42));
+        btnJasper.setForeground(Color.WHITE);
+        btnJasper.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
         btnRefresh.addActionListener(e -> muatDataDariDatabase());
         btnHapus.addActionListener(e -> hapusPesanan());
         btnCetak.addActionListener(e -> cetakBuktiInvoice());
+        btnJasper.addActionListener(e -> LaporanJasperService.tampilkanMenuLaporan(this, getSelectedNomorPesanan()));
 
         pnlAksiTabel.add(btnRefresh);
         pnlAksiTabel.add(btnHapus);
         pnlAksiTabel.add(btnCetak);
+        pnlAksiTabel.add(btnJasper);
         pnlTabel.add(pnlAksiTabel, BorderLayout.SOUTH);
 
         splitPane.setRightComponent(pnlTabel);
@@ -505,20 +511,20 @@ public class Main extends JFrame {
             return;
         }
 
-        int id = (int) tableModel.getValueAt(selectedRow, 0);
         String noPesanan = (String) tableModel.getValueAt(selectedRow, 1);
 
         int konfirmasi = JOptionPane.showConfirmDialog(this,
-            "Yakin ingin menghapus pesanan " + noPesanan + " (ID: " + id + ") dari database?",
+            "Yakin ingin menghapus pesanan " + noPesanan + " dari database?",
             "Konfirmasi Hapus",
             JOptionPane.YES_NO_OPTION);
 
         if (konfirmasi == JOptionPane.YES_OPTION) {
             try (Connection conn = KoneksiDB.getConnection()) {
-                String sql = "DELETE FROM pesanan WHERE id = ?";
-                PreparedStatement ps = conn.prepareStatement(sql);
-                ps.setInt(1, id);
-                ps.executeUpdate();
+                String sql = "DELETE FROM pesanan WHERE nomor_pesanan = ?";
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, noPesanan);
+                    ps.executeUpdate();
+                }
 
                 JOptionPane.showMessageDialog(this, "Pesanan " + noPesanan + " berhasil dihapus dari MySQL!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
                 muatDataDariDatabase();
@@ -528,8 +534,15 @@ public class Main extends JFrame {
         }
     }
 
+    private String getSelectedNomorPesanan() {
+        int selectedRow = tabelPesanan.getSelectedRow();
+        if (selectedRow == -1) return null;
+        Object val = tableModel.getValueAt(selectedRow, 1);
+        return val != null ? val.toString() : null;
+    }
+
     /**
-     * Cetak Bukti Invoice Resmi CV. AXL SARANA MANDIRI
+     * Cetak Bukti Invoice Resmi CV. AXL SARANA MANDIRI via JasperReports v6
      */
     private void cetakBuktiInvoice() {
         int selectedRow = tabelPesanan.getSelectedRow();
@@ -539,29 +552,6 @@ public class Main extends JFrame {
         }
 
         String noPesanan = (String) tableModel.getValueAt(selectedRow, 1);
-        String sekolah = (String) tableModel.getValueAt(selectedRow, 2);
-        String tanggal = (String) tableModel.getValueAt(selectedRow, 3);
-        String total = (String) tableModel.getValueAt(selectedRow, 4);
-        String status = (String) tableModel.getValueAt(selectedRow, 5);
-
-        String bukti = "================================================================\n" +
-                       "         BUKTI SALES ORDER PENGADAAN SEKOLAH (DANA BOS)        \n" +
-                       "                    CV. AXL SARANA MANDIRI                     \n" +
-                       "================================================================\n" +
-                       " No. Pesanan     : " + noPesanan + "\n" +
-                       " Sekolah Penerima: " + sekolah + "\n" +
-                       " Tanggal Order   : " + tanggal + "\n" +
-                       " Total Tagihan   : " + total + " (Termasuk Pajak PPN 11%)\n" +
-                       " Status Order    : " + status + "\n" +
-                       "================================================================\n" +
-                       " Mengetahui / Disetujui Oleh:\n\n\n" +
-                       " ( Axl Regan Yohande )\n" +
-                       " Direktur CV. AXL SARANA MANDIRI\n" +
-                       "================================================================";
-
-        JTextArea ta = new JTextArea(bukti);
-        ta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        ta.setEditable(false);
-        JOptionPane.showMessageDialog(this, new JScrollPane(ta), "Cetak Bukti Invoice: " + noPesanan, JOptionPane.INFORMATION_MESSAGE);
+        LaporanJasperService.tampilkanMenuInvoice(this, noPesanan);
     }
 }
